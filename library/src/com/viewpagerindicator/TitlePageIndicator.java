@@ -99,7 +99,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
     private boolean mBoldText;
     private int mColorText;
     private int mColorSelected;
-    private Path mPath;
+    private Path mPath = new Path();
     private final Paint mPaintFooterLine = new Paint();
     private IndicatorStyle mFooterIndicatorStyle;
     private final Paint mPaintFooterIndicator = new Paint();
@@ -111,6 +111,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
     /** Left and right side padding for not active view titles. */
     private float mClipPadding;
     private float mFooterLineHeight;
+    private RectF bounds = new RectF();
+
 
     private static final int INVALID_POINTER = -1;
 
@@ -430,7 +432,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
         }
 
         //Draw the footer line
-        mPath = new Path();
+        mPath.reset();
         mPath.moveTo(0, height - mFooterLineHeight / 2f);
         mPath.lineTo(width, height - mFooterLineHeight / 2f);
         mPath.close();
@@ -438,7 +440,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
         switch (mFooterIndicatorStyle) {
             case Triangle:
-                mPath = new Path();
+                mPath.reset();
                 mPath.moveTo(halfWidth, height - mFooterLineHeight - mFooterIndicatorHeight);
                 mPath.lineTo(halfWidth + mFooterIndicatorHeight, height - mFooterLineHeight);
                 mPath.lineTo(halfWidth - mFooterIndicatorHeight, height - mFooterLineHeight);
@@ -452,7 +454,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
                 }
 
                 RectF underlineBounds = bounds.get(page);
-                mPath = new Path();
+                mPath.reset();
                 mPath.moveTo(underlineBounds.left  - mFooterIndicatorUnderlinePadding, height - mFooterLineHeight);
                 mPath.lineTo(underlineBounds.right + mFooterIndicatorUnderlinePadding, height - mFooterLineHeight);
                 mPath.lineTo(underlineBounds.right + mFooterIndicatorUnderlinePadding, height - mFooterLineHeight - mFooterIndicatorHeight);
@@ -725,7 +727,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
             height = MeasureSpec.getSize(heightMeasureSpec);
         } else {
             //Calculate the text bounds
-            RectF bounds = new RectF();
+        	bounds.setEmpty();
             bounds.bottom = mPaintText.descent()-mPaintText.ascent();
             height = bounds.bottom - bounds.top + mFooterLineHeight + mFooterPadding + mTopPadding;
             if (mFooterIndicatorStyle != IndicatorStyle.None) {
